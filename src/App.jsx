@@ -45,17 +45,19 @@ const sampleLeads = [
 
 export default function App() {
   const [leads, setLeads] = useState(sampleLeads);
+  const [addSignal, setAddSignal] = useState(0);
 
-  const recent = useMemo(() =>
-    [...leads].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5),
-  [leads]);
+  const recent = useMemo(
+    () => [...leads].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5),
+    [leads]
+  );
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="flex">
         <Sidebar />
         <div className="flex-1 min-w-0">
-          <Topbar onAdd={() => { /* delegated to LeadsTable */ }} />
+          <Topbar onAdd={() => setAddSignal((s) => s + 1)} />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
             <StatsCards leads={leads} />
 
@@ -64,7 +66,7 @@ export default function App() {
                 <h2 className="text-lg font-semibold text-slate-800">Recent Leads</h2>
                 <span className="text-sm text-slate-500">{recent.length} shown</span>
               </div>
-              <LeadsTable leads={leads} setLeads={setLeads} />
+              <LeadsTable leads={leads} setLeads={setLeads} addSignal={addSignal} />
             </section>
           </main>
         </div>

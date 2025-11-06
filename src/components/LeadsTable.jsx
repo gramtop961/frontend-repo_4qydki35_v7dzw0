@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Edit, Trash2, Filter, ChevronDown, Mail, Phone, Building2, User2, Search, X } from 'lucide-react';
 
 const STATUSES = ['New', 'Contacted', 'Qualified', 'Converted'];
@@ -32,7 +32,7 @@ function Modal({ open, title, children, onClose }) {
   );
 }
 
-export default function LeadsTable({ leads, setLeads, onAddClick }) {
+export default function LeadsTable({ leads, setLeads, onAddClick, addSignal }) {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [editing, setEditing] = useState(null);
@@ -56,6 +56,13 @@ export default function LeadsTable({ leads, setLeads, onAddClick }) {
     setOpen(true);
     onAddClick?.();
   };
+
+  useEffect(() => {
+    if (addSignal) {
+      startAdd();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addSignal]);
 
   const startEdit = (lead) => {
     setEditing(lead.id);
@@ -131,7 +138,7 @@ export default function LeadsTable({ leads, setLeads, onAddClick }) {
           </thead>
           <tbody>
             {filtered.map((lead) => (
-              <tr key={lead.id} className="border-t border-slate-100 hover:bg-slate-50">
+              <tr key={lead.id} className="border-top border-slate-100 hover:bg-slate-50">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center">
